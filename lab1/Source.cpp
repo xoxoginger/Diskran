@@ -9,10 +9,11 @@ struct Elem {
 	unsigned long long Value;
 };
 
-const unsigned int BIT_SIZE = sizeof(unsigned long long) * 8;//64 бита
-const unsigned int PART_SIZE = (unsigned int)log2(BIT_SIZE);//6 бит
-const unsigned int PART_COUNT = (BIT_SIZE / PART_SIZE) + 1;//12 штук - макс кол-во разрядов
-const unsigned long long PART_MASK = (unsigned long long)pow(2, PART_SIZE); //макс ключ
+
+const unsigned int BIT_SIZE = sizeof(unsigned long long) * 8;//64 ГЎГЁГІГ 
+const unsigned int PART_SIZE = (unsigned int)log2(BIT_SIZE);//6 ГЎГЁГІ
+const unsigned int PART_COUNT = (BIT_SIZE / PART_SIZE) + 1;//12 ГёГІГіГЄ - Г¬Г ГЄГ± ГЄГ®Г«-ГўГ® Г°Г Г§Г°ГїГ¤Г®Гў
+const unsigned long long PART_MASK = (unsigned long long)pow(2, PART_SIZE); //Г¬Г ГЄГ± ГЄГ«ГѕГ·
 
 template <typename T>
 class Vector {
