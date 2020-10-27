@@ -1,0 +1,184 @@
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+\usepackage{multicol,multirow}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{ulem}
+\usepackage[russian]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1, T2A]{fontenc}
+\usepackage{fullpage}
+\usepackage{multicol,multirow}
+\usepackage{tabularx}
+\usepackage{ulem}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{indentfirst}
+
+\begin{document}
+
+\section*{Лабораторная работа №\,1 по курсу дискрeтного анализа: сортировка за линейное время}
+
+Выполнила студентка группы М80-407Б-17 МАИ \textit{Алексюнина Юлия}.
+
+\subsection*{Условие}
+\begin{enumerate}
+\item Требуется разработать программу, осуществляющую ввод пар «ключ-значение», их упорядочивание по возрастанию ключа алгоритмом сортировки подсчётом и вывод отсортированной последовательности. 
+\item Вариант 3-3.
+
+Поразрядная сортировка.
+
+Тип ключа: числа от 0 до $2^{64}-1$.
+
+Тип значения: числа от 0 до $2^{64}-1$.
+\end{enumerate}
+
+\subsection*{Метод решения}
+
+\begin{enumerate}
+    \item Данные на вход программе подаются через стандартный поток ввода и, как следствие, весьма удобно считывать циклом \textbf{while} (пока значение может быть прочитано, продолжать цикл). 
+    \begin{lstlisting}[language=C++]
+    while(std::cin >> el.Key >> el.Value)
+    \end{lstlisting}
+    \item По алгоритму сортировки необходимо знать максимальный ключ, он находится в цикле считывания данных.
+    \item Собственно сам алгоритм сортировки принимает на вход вектор \textbf{v}, пары "ключ-значение"\ которого необходимо отсортировать по порядку возрастания ключей, и максимальный ключ. Также в коде сортировки присутствуют 2 дополнительных массива: массив \textbf{b[c[(v[i].Key)]]} для хранения отсортированных выходных данных, массив для временной работы \textbf{c[0...PART\_MASK]}, где \textbf{PART\_MASK} - максимальный ключ.
+\end{enumerate}
+
+\subsection*{Описание программы}
+
+На каждой непустой строке входного файла располагается пара «ключ-значение»,
+поэтому создадим новую структуру \textbf{Elem}, в которой будем хранить ключ и значение.
+
+А также мы не знаем количество входных данных, поэтому мы напишем динамический массив - вектор, в который будут помещаться структуры 
+\textbf{Elem}.
+\begin{table}[!htb]
+\begin{tabular}{|m{8cm}|m{8cm}|}
+\hline
+\multicolumn{2}{|c|}{Source.cpp} \\ 
+\hline
+\cellcolor{gray!25} Тип данных       & \cellcolor{gray!25} Значение\\ 
+\hline
+struct Elem & Структура для хранения пары "ключ-значение" \\ 
+\hline
+template <typename T> class Vector & Вектор для хранения структур \textbf{Elem}\\
+\hline
+\cellcolor{gray!25} Функция & \cellcolor{gray!25}Значение\\
+\hline
+Vector() & Конструктор класса \textbf{Vector} \\
+\hline
+Vector(int size, const value\_type\& default\_value = value\_type()) & Конструктор класса \textbf{Vector} \\
+\hline
+int Size() const & Размер вектора \\
+\hline
+friend void swap(Vector\& lhs, Vector\& rhs) & Обмен местами двух векторов\\
+\hline
+Vector\& operator=(Vector other) & Перегрузка оператора присваивания для класса \textbf{Vector}\\
+\hline
+$\sim$ Vector() & Деструктор класса \textbf{Vector} \\
+\hline
+void PushBack(const value\_type\& value) & Добавить элемент в конец вектора\\
+\hline
+void CountingSortBit(Vector <Elem>\& v, int size, int point) & Функция сортировки подсчетом\\
+\hline
+void RadixSort(Vector <Elem>\& v) & Функция поразрядной сортировки\\
+\hline
+int main() & Главная функция, в которой происходит чтение данных, вызов функции сортировки и вывод. \\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+\clearpage
+
+\subsection*{Дневник отладки}
+
+При создании этой таблицы была использована таблица локального репозитория.
+\begin{table}[!htb]
+\begin{tabular}{|m{2cm}|m{3cm}|m{11cm}|}
+\hline
+\multicolumn{3}{|c|}{Дневник отладки} \\ 
+\hline
+Время & Коммит & Описание \\
+\hline
+2020/10/25  19:47:27 & init & Начало работы, прочитаны главы из Кормена про алгоритмы сортировки, написаны шаблоны файлов и функций \\
+\hline
+2020/10/25 23:39:09 & parsing & продумывание возможных идей парсинга входных данных так, чтобы можно было работать с неизвестным количеством пар "ключ-значение" \\
+\hline
+2020/10/26 03:10:18 & сортировка & переписывание алгоритма сортировки по аналогии с алгоритмом, данным в Кормене. \\
+\hline
+2020/10/26 12:10:14 & сортировка, ч2 & дополнение алгоритма сортировки, организована побитовая сортировка подсчетом \\
+\hline
+2020/10/26 15:10:20 & рабочая версия программы & программа работает в vs, но рантаймится на чекере:( \\
+\hline
+2020/10/26 18:30:49 & optimization & поиск причин рантайма, оптимизация кода \\
+\hline
+2020/10/27 12:17:18 & death & создание класса Вектор для объектов пар "ключ-значение", прописывание основных полей и методов, оптимизация времени работы\\
+\hline
+2020/10/27 17:17:03 & alive & рабочая версия программы, ОК на чекере\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{Тест производительности}
+
+Тесты создавались с помощью небольшой программы на языке C++:
+
+
+\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <fstream>
+#include <ctime>
+#include <cstdlib>
+
+int main(int argc, char *argv[]) {
+	std::ofstream file(argv[1]);
+	srand(time(0));
+	size_t size = atoi(argv[2]);
+	char value[65];
+	for (register int i = 0; i < size; i++) {
+		file << rand() % 65535 << " ";
+		for (register int j = 0; j < 64; j++) {
+			value[j] = (char) (rand() % 26 + 97);
+		}
+		value[64] = '\0';
+		file << value << "\n";
+	}
+	return 0;
+}
+\end{lstlisting}
+
+\begin{tikzpicture}
+	\begin{axis}[ylabel=Время,xlabel=Количество строк, width=15.5cm, height=10cm,grid=both]
+	\addplot coordinates {
+		( 100000, 1.170 )
+		( 90000, 1.089 )
+		( 80000, 0.944 )
+		( 70000, 0.858 )
+		( 60000, 0.727 )
+		( 50000, 0.600 )
+		( 40000, 0.469 )
+		( 30000, 0.355  )
+		( 20000, 0.262  )
+		( 10000, 0.126  )};
+	\addplot coordinates {
+	( 10000, 0.126)
+	( 100000, 1.170 )};
+	\end{axis}
+
+\end{tikzpicture}
+
+\subsection*{Недочёты}
+
+При неиспользовании опций std::ios\_base::sync\_with\_stdio(false)  и  std::cin.tie(NULL); программа не проходила тест по времени. После добавления этих опций время работы программы уменьшилось почти в 3 раза.
+
+\subsection*{Выводы}
+
+Данный алгоритм сортировки можно применять для обработки списка людей по году рождения, где ключ -- год рождения, а значение -- фамилия, имя, отчество.
+
+В целом написание программы было полезным, посколько я получила опыт создания поразрядной сортировки, улучшила навыки отладки программы. 
+
+\end{document}
